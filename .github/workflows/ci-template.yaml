@@ -48,6 +48,24 @@ jobs:
           -chdir="${{inputs.root_module_folder_relative_path}}" \
           validate
 
+      - name: Install TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        run: |
+          cd "${{ inputs.root_module_folder_relative_path }}"
+          tflint --recursive
+
+      - name: Install Checkov
+        run: |
+          python -m pip install checkov==3.3.17
+
+      - name: Run Checkov
+        run: |
+          cd "${{ inputs.root_module_folder_relative_path }}"
+          checkov -d .
+
+
   plan:
     name: Validate Terraform Plan
     needs: validate
